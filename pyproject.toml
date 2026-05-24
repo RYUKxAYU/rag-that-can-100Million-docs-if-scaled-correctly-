@@ -1,0 +1,22 @@
+[project]
+name = "rag_context_engine"
+version = "0.1.0"
+description = "Enterprise-grade foundation for a FastAPI-based RAG context engine."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.109.0",
+    "uvicorn[standard]>=0.24.0",
+    "pydantic>=2.9.0",
+    "python-dotenv>=1.2.0",
+    "PyPDF2>=3.0.0",
+    "fpdf2>=2.5.0"
+]
+
+[tool.pytest]
+addopts = ["--cov=app", "--cov-report=term-missing"]
+testpaths = ["tests"]
+
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
