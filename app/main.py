@@ -7,6 +7,7 @@ from fastapi.responses import JSONResponse
 from app.config import get_settings
 from app.health import router as health_router
 from app.logging import configure_logging
+from app.orchestration import OrchestrationService
 
 
 def create_app() -> FastAPI:
@@ -20,6 +21,16 @@ def create_app() -> FastAPI:
     )
 
     app.state.start_time = time.monotonic()
+    app.state.orchestration_service = OrchestrationService()
+
+    @app.on_event("startup")
+    async def startup_event() -> None:
+        await app.state.orchestration_service.initialize()
+
+    @app.on_event("shutdown")
+    async def shutdown_event() -> None:
+        await app.state.orchestration_service.shutdown()
+
     app.include_router(health_router)
 
     @app.middleware("http")
