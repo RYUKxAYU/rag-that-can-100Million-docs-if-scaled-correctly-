@@ -1,0 +1,27 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Coverage
+.coverage
+coverage.xml
+htmlcov/
+
+# Pytest
+.pytest_cache/
+
+# Database files
+retrieval_vectors.db
+*.sqlite
+
+# Deployment/runtime artifacts
+90%
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
