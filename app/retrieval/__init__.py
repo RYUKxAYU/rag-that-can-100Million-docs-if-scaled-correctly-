@@ -20,6 +20,15 @@ from app.retrieval.crag import (
     RetrievalRejectionSystem,
     RetrievalSufficiencyClassifier,
 )
+from app.retrieval.hyde import (
+    EmbeddingFusionEngine,
+    HypotheticalDocumentGenerator,
+    HyDEEmbeddingService,
+    HyDEExpansionOutcome,
+    HyDEQueryExpander,
+    SemanticExpansionValidation,
+    SemanticExpansionValidator,
+)
 
 __all__ = [
     "BM25Retriever",
@@ -43,4 +52,11 @@ __all__ = [
     "RetrievalQualityEvaluator",
     "RetrievalRejectionSystem",
     "RetrievalSufficiencyClassifier",
+    "EmbeddingFusionEngine",
+    "HypotheticalDocumentGenerator",
+    "HyDEEmbeddingService",
+    "HyDEExpansionOutcome",
+    "HyDEQueryExpander",
+    "SemanticExpansionValidation",
+    "SemanticExpansionValidator",
 ]
