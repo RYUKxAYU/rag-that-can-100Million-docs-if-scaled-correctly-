@@ -12,6 +12,14 @@ from app.retrieval.corag import (
     RetrievalCritic,
     RetrievalCriticResult,
 )
+from app.retrieval.crag import (
+    CorrectiveRetrievalManager,
+    CorrectiveRetrievalOutcome,
+    CRAGEvaluationResult,
+    RetrievalQualityEvaluator,
+    RetrievalRejectionSystem,
+    RetrievalSufficiencyClassifier,
+)
 
 __all__ = [
     "BM25Retriever",
@@ -29,4 +37,10 @@ __all__ = [
     "QueryRewriter",
     "IterativeRetrievalLoop",
     "RecursiveRetrievalOrchestrator",
+    "CorrectiveRetrievalManager",
+    "CorrectiveRetrievalOutcome",
+    "CRAGEvaluationResult",
+    "RetrievalQualityEvaluator",
+    "RetrievalRejectionSystem",
+    "RetrievalSufficiencyClassifier",
 ]
