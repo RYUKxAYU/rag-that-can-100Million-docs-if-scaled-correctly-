@@ -24,6 +24,12 @@
     "app/query_planning/router.py",
     "benchmarks/benchmark_graph.py",
     "tests/test_graph.py",
+    "app/raptor/__init__.py",
+    "app/raptor/clustering.py",
+    "app/raptor/engine.py",
+    "app/raptor/schema.py",
+    "app/raptor/summarization.py",
+    "tests/test_raptor.py",
     "checkpoints/phase_13_complete.json"
   ]
 }
