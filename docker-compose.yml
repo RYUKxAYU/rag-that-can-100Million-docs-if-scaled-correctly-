@@ -1,11 +1,62 @@
 version: "3.9"
 services:
   rag-engine:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.gpu
     ports:
       - "8000:8000"
     environment:
       APP_ENV: production
+      OFFLINE_MODE: "true"
       LOG_LEVEL: INFO
       APP_HOST: 0.0.0.0
       APP_PORT: 8000
+      LOCAL_DATA_PATH: /app/data
+      BACKUP_PATH: /app/backups
+      LOG_PATH: /app/logs
+      NVIDIA_VISIBLE_DEVICES: all
+    runtime: nvidia
+    device_requests:
+      - driver: nvidia
+        count: all
+        capabilities: [gpu]
+    volumes:
+      - ./data:/app/data:rw
+      - ./logs:/app/logs:rw
+      - ./backups:/app/backups:rw
+      - ./scripts:/app/scripts:ro
+    deploy:
+      restart_policy:
+        condition: on-failure
+
+  prometheus:
+    image: prom/prometheus:2.48.1
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    depends_on:
+      - blackbox-exporter
+    restart: unless-stopped
+
+  blackbox-exporter:
+    image: prom/blackbox-exporter:0.24.0
+    ports:
+      - "9115:9115"
+    volumes:
+      - ./monitoring/blackbox.yml:/etc/blackbox_exporter/config.yml:ro
+    command:
+      - --config.file=/etc/blackbox_exporter/config.yml
+    restart: unless-stopped
+
+  backup:
+    image: alpine:3.18
+    depends_on:
+      - rag-engine
+    volumes:
+      - ./data:/app/data:rw
+      - ./backups:/app/backups:rw
+      - ./scripts:/app/scripts:ro
+    entrypoint: ["/bin/sh", "-c", "chmod +x /app/scripts/backup.sh && /app/scripts/backup.sh"]
+    restart: "no"

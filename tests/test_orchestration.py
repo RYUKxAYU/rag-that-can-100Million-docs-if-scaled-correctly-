@@ -150,6 +150,8 @@ def test_orchestration_service_runs_default_workflow_and_publishes_events() -> N
     assert result.success is True
     assert result.payload["query"] == "hello world"
     assert result.payload["validated"] is True
+    assert "query_plan" in result.payload["metadata"]
+    assert result.payload["metadata"]["query_plan"]["classification"] in {"factual", "analytical", "multi-hop"}
     assert events[0][0] == "workflow.start"
     assert events[1][0] == "workflow.complete"
     assert events[1][1]["success"] is True

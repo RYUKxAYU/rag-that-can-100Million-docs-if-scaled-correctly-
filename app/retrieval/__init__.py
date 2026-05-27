@@ -5,6 +5,13 @@ from app.retrieval.orchestrator import HybridRetrievalOrchestrator
 from app.retrieval.reranker import CrossEncoderReranker
 from app.retrieval.schema import RetrievalItem, RetrievalResult
 from app.retrieval.vector_store import VectorStore, VectorRetriever
+from app.retrieval.corag import (
+    IterativeRetrievalLoop,
+    QueryRewriter,
+    RecursiveRetrievalOrchestrator,
+    RetrievalCritic,
+    RetrievalCriticResult,
+)
 
 __all__ = [
     "BM25Retriever",
@@ -17,4 +24,9 @@ __all__ = [
     "rrf_fusion",
     "RetrievalItem",
     "RetrievalResult",
+    "RetrievalCritic",
+    "RetrievalCriticResult",
+    "QueryRewriter",
+    "IterativeRetrievalLoop",
+    "RecursiveRetrievalOrchestrator",
 ]

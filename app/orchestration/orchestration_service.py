@@ -6,6 +6,7 @@ from app.orchestration.dependency_injection import DependencyInjectionContainer
 from app.orchestration.event_bus import EventBus, OrchestrationEvent
 from app.orchestration.pipeline import PipelineManager, PipelineResult, PipelineStage
 from app.orchestration.service_manager import Service, ServiceManager
+from app.query_planning import QueryPlanningEngine
 
 
 class OrchestrationService(Service):
@@ -26,6 +27,8 @@ class OrchestrationService(Service):
         self.container.register_singleton(PipelineManager, self.pipeline_manager)
         self.container.register_singleton(ServiceManager, self.service_manager)
 
+        self._query_planner = QueryPlanningEngine()
+        self.container.register_singleton(QueryPlanningEngine, self._query_planner)
         self._configure_default_pipeline()
 
     async def startup(self) -> None:
@@ -57,6 +60,7 @@ class OrchestrationService(Service):
         self.pipeline_manager.clear()
         self.pipeline_manager.add_stage(PipelineStage("validate_query", self._validate_query))
         self.pipeline_manager.add_stage(PipelineStage("normalize_query", self._normalize_query))
+        self.pipeline_manager.add_stage(PipelineStage("plan_query", self._plan_query))
         self.pipeline_manager.add_stage(PipelineStage("finalize_response", self._finalize_response))
 
     async def _validate_query(self, payload: Any, context: Dict[str, Any]) -> Any:
@@ -70,10 +74,19 @@ class OrchestrationService(Service):
         context["normalized"] = normalized
         return normalized
 
+    async def _plan_query(self, payload: Any, context: Dict[str, Any]) -> Any:
+        query_plan = self._query_planner.plan_as_dict(str(payload))
+        context["query_plan"] = query_plan
+        return payload
+
     async def _finalize_response(self, payload: Any, context: Dict[str, Any]) -> Any:
         response = {
             "query": payload,
             "validated": context.get("validated", False),
-            "metadata": {"source": "orchestration", "sequence_id": int(time.time())},
+            "metadata": {
+                "source": "orchestration",
+                "sequence_id": int(time.time()),
+                "query_plan": context.get("query_plan"),
+            },
         }
         return response
